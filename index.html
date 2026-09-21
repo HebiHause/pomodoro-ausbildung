@@ -222,19 +222,28 @@ todoHeader.addEventListener('click', function() {
     graphicPanel.classList.toggle('hidden');
 });
 
+
 function loadGraphic() {
+    const dayNames = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
+
     fetch('/graphic')
         .then(response => response.json())
         .then(data => {
             const columns = document.querySelectorAll('.graphic .day-column');
             data.forEach((item, index) => {
-                if (columns[index]) {
-                    const bar = columns[index].querySelector('.bar') || columns[index].querySelector('.bar1');
-                    if (bar) {
-                        // Множимо на коефіцієнт (наприклад, 20px за кожну сесію), щоб стовпчик мав гарну висоту
-                        bar.style.height = (item.sessions * 20) + 'px';
-                    }
-                }
+                const column = columns[index];
+                if (!column) return;
+
+                const bar = column.querySelector('.bar, .bar1');
+                const label = column.querySelector('span');
+
+                // 'T00:00:00' makes the browser read the date as local time,
+                // otherwise "2026-09-21" is treated as UTC and can shift the day
+                const date = new Date(item.date + 'T00:00:00');
+
+                label.textContent = dayNames[date.getDay()];
+                bar.className = (index === data.length - 1) ? 'bar1' : 'bar';
+                bar.style.height = Math.max(item.sessions * 20, 4) + 'px';
             });
         });
 }

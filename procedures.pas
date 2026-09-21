@@ -215,7 +215,7 @@ procedure DeleteTask(taskID: Integer);
 var i, idx: Integer;
 begin
   idx := -1;
-    for i := 0 to Length(list) - 2 do
+    for i := 0 to Length(list) - 1 do
         if list[i].id = taskID then
         idx := i;
 

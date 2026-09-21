@@ -7,8 +7,8 @@ body {
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(2, 1fr);
     height: 100vh;
-    gap: 20px;
-    padding: 68px;
+    gap: clamp(12px, 1.3vw, 33px); 
+    padding: clamp(24px, 4.43vw, 113px); 
     margin: 0;
     box-sizing: border-box;
 }
@@ -80,10 +80,10 @@ body {
 }
 
 h2 {
-    font-size: 32px;
+    font-size: clamp(20px, 2.08vw, 53px);
     color: white;
     margin: 0;
-    padding: 20px;
+    padding: clamp(10px, 1.3vw, 33px);
 }
 
 .graphic-panel {
@@ -101,9 +101,9 @@ h2 {
     border: none;
     background-color: #333333;
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: clamp(6px, 0.65vw, 17px) clamp(12px, 1.3vw, 33px);
     margin: 0px 0px;
-    font-size: 24px;
+    font-size: clamp(14px, 1.56vw, 40px);
     color: white;
     cursor: pointer;
 
@@ -122,9 +122,9 @@ h2 {
     border: 2px solid #333333;
     border-radius: 10px;
     background-color: transparent;
-    padding: 12px 24px;
+    padding: clamp(8px, 0.78vw, 20px) clamp(14px, 1.56vw, 40px);
     margin: 10px;
-    font-size: 24px;
+    font-size: clamp(14px, 1.56vw, 40px);
     color: white;
     cursor: pointer;
 }
@@ -137,8 +137,8 @@ h2 {
 /* Timer Circle Styles */
 
 .timer-circle {
-    width: 400px;
-    height: 400px;
+    width: clamp(220px, 26.04vw, 666px);  
+    height: clamp(220px, 26.04vw, 666px);
     border-radius: 50%;
     background: conic-gradient(
         #d9d9d9 0% 70%,
@@ -162,7 +162,7 @@ h2 {
 }
 
 time {
-    font-size: 96px;
+    font-size: clamp(40px, 6.25vw, 160px); 
     color: white;
     margin: 0;
 }
@@ -170,7 +170,7 @@ time {
 /* To Do list */
 
 .Session {
-    font-size: 24px;
+    font-size: clamp(14px, 1.56vw, 40px);
     color: white;
     margin: 0;
 }

@@ -153,21 +153,21 @@
     const taskList = document.querySelector('.todo-panel ul');
     const taskInput = document.querySelector('.input-row input[type="text"]');
     const addButton = document.querySelector('.add-button');
-
+    
     function renderTasks(tasks) {
-        taskList.innerHTML = '';
-        tasks.forEach(task => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <label>
-                    <input type="checkbox" ${task.Done ? 'checked' : ''} data-id="${task.id}">
-                    <span>${task.nameTask}</span>
-                </label>
-            `;
-            taskList.appendChild(li);
-        });
-    }
-
+    taskList.innerHTML = '';
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <label>
+                <input type="checkbox" ${task.Done ? 'checked' : ''} data-id="${task.id}">
+                <span>${task.nameTask}</span>
+            </label>
+            <button type="button" class="delete-btn" data-id="${task.id}">×</button>
+        `;
+        taskList.appendChild(li);
+    });
+}
     function loadTasks() {
         fetch('/tasks')
             .then(response => response.json())
@@ -200,20 +200,6 @@
     loadTasks();
     setInterval(loadTasks, 2000);
 
-    function renderTasks(tasks) {
-    taskList.innerHTML = '';
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <label>
-                <input type="checkbox" ${task.Done ? 'checked' : ''} data-id="${task.id}">
-                <span>${task.nameTask}</span>
-            </label>
-            <button type="button" class="delete-btn" data-id="${task.id}">×</button>
-        `;
-        taskList.appendChild(li);
-    });
-}
 
 taskList.addEventListener('click', (e) => {
     if (e.target.classList.contains('delete-btn')) {

@@ -18,6 +18,8 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    background-color: #333333;
+    border-radius: 10px;
 }
 
 .timer-panel {
@@ -93,12 +95,6 @@ h2 {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-}
-
-
-.pomodoro-buttons {
-    background-color: #333333;
-    border-radius: 10px;
 }
 
 .btn {
@@ -243,6 +239,10 @@ ul::-webkit-scrollbar-thumb:hover {
 
 li {
     padding: 12px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 label {
@@ -311,15 +311,6 @@ label:has(input[type="checkbox"]:checked) span {
     font-size: 16px;
     font-weight: bold;
 }
-
-li {
-    padding: 12px 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .delete-btn {
     background: transparent;
     border: none;

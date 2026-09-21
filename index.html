@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="timer-panel">
+        <h2>Session: <span id="session-response">1</span></h2>
+        <div class="pomodoro-buttons">
+            <button type="button"  id="btn-pomodoro" class="btn" onclick="sendAction('/set-pomodoro')">Pomodoro</button>
+            <button type="button" id="btn-short" class="btn" onclick="sendAction('/set-short-pause')">Short Pause</button>
+            <button type="button" id="btn-long" class="btn" onclick="sendAction('/set-long-pause')">Long Pause</button>
+        </div>
+
+        <div class="timer-circle" id="timer-circle">
+           <div class="timer-inner">
+            <time id="timer-display">25:00</time>
+            <p class="Session">Session time</p>
+           </div>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="button" onclick="sendAction('/start-pause')">Start/Pause</button>
+            <button type="button" class="button" onclick="sendAction('/reset')">Reset</button>
+            <button type="button" class="button" onclick="sendAction('/skip')">Skip</button>
+        </div>
+    </div>
+
+    <div class="todo-panel">
+
+        <div class="header" id="todo-header" style="cursor: pointer;">
+            <h2>To-Do List</h2>
+        </div>
+        <div class="input-row">
+            <input type="text" placeholder="Create a new task...">
+            <button type="button" class="add-button">+</button>
+        </div>
+        <ul>
+            <li>
+                <label>
+                    <input type="checkbox" checked><span>Pomodoro list</span>
+                </label>
+            </li>            
+            <li>
+                <label>
+                    <input type="checkbox"> Create To Do list
+                </label>
+            </li>            
+            <li>
+                <label>
+                    <input type="checkbox"> UI/UX Design
+                </label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="graphic-panel">
+        <div class="header">
+            <h2>Graphic activities</h2>
+        </div>        
+            <div class="graphic">
+
+                <div class="day-column">
+                    <div class="bar" style="height: 80px;"></div>
+                    <span>M</span>
+                </div>        
+                
+                <div class="day-column">
+                    <div class="bar" style="height: 60px;"></div>
+                    <span>Tu</span>
+                </div>    
+
+                <div class="day-column">
+                    <div class="bar" style="height: 100px;"></div>
+                    <span>W</span>
+                </div>
+                
+                <div class="day-column">
+                    <div class="bar1" style="height: 160px;"></div>
+                    <span>Th</span>
+                </div>    
+                
+                <div class="day-column">
+                    <div class="bar" style="height: 140px;"></div>
+                    <span>F</span>
+                </div>    
+                
+                <div class="day-column">
+                    <div class="bar" style="height: 100px;"></div>
+                    <span>Sa</span>
+                </div>    
+                
+                <div class="day-column">
+                    <div class="bar" style="height: 50px;"></div>
+                    <span>Su</span>
+                </div>    
+
+            </div>
+    </div>
+
+<script>
+    const pomodoro = document.getElementById('btn-pomodoro');
+    const shortRest = document.getElementById('btn-short');
+    const lostRest = document.getElementById('btn-long');
+    setInterval(function() {
+        fetch('/timer-status')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('timer-display').textContent = text;
+            });
+
+        fetch('/session-request')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('session-response').textContent = text;
+            });
+
+        fetch('/mode-status')
+            .then(response => response.text())
+            .then(text => {
+                const mode = text.trim(); 
+                pomodoro.classList.remove('active');
+                shortRest.classList.remove('active');
+                lostRest.classList.remove('active');
+
+                if (mode === '0') document.getElementById('btn-pomodoro').classList.add('active');
+                if (mode === '1') document.getElementById('btn-short').classList.add('active');
+                if (mode === '2') document.getElementById('btn-long').classList.add('active');
+            });
+
+        fetch('/progress-conic-gradient')
+            .then(response => response.text())
+            .then(text => {
+                const percent = text.trim();
+                const p = parseFloat(percent);
+                document.getElementById('timer-circle').style.background =
+                    `conic-gradient(#d9d9d9 0% ${p}%, #3a3a3a ${p + 3}% 100%)`;
+            });
+    }, 900);
+</script>
+
+<script>
+    function sendAction(url) {
+        fetch(url);
+    }
+</script>
+
+<script>
+    const taskList = document.querySelector('.todo-panel ul');
+    const taskInput = document.querySelector('.input-row input[type="text"]');
+    const addButton = document.querySelector('.add-button');
+
+    function renderTasks(tasks) {
+        taskList.innerHTML = '';
+        tasks.forEach(task => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <label>
+                    <input type="checkbox" ${task.Done ? 'checked' : ''} data-id="${task.id}">
+                    <span>${task.nameTask}</span>
+                </label>
+            `;
+            taskList.appendChild(li);
+        });
+    }
+
+    function loadTasks() {
+        fetch('/tasks')
+            .then(response => response.json())
+            .then(tasks => renderTasks(tasks));
+    }
+
+    addButton.addEventListener('click', () => {
+        const name = taskInput.value.trim();
+        if (name === '') return;
+
+        fetch('/add-task', {
+            method: 'POST',
+            body: JSON.stringify({ nameTask: name })
+        }).then(() => {
+            taskInput.value = '';
+            loadTasks();
+        });
+    });
+
+    taskList.addEventListener('change', (e) => {
+        if (e.target.type === 'checkbox') {
+            const id = e.target.dataset.id;
+            fetch('/task-done', {
+                method: 'POST',
+                body: JSON.stringify({ id: parseInt(id) })
+            });
+        }
+    });
+
+    loadTasks();
+    setInterval(loadTasks, 2000);
+
+    function renderTasks(tasks) {
+    taskList.innerHTML = '';
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <label>
+                <input type="checkbox" ${task.Done ? 'checked' : ''} data-id="${task.id}">
+                <span>${task.nameTask}</span>
+            </label>
+            <button type="button" class="delete-btn" data-id="${task.id}">×</button>
+        `;
+        taskList.appendChild(li);
+    });
+}
+
+taskList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('delete-btn')) {
+        const id = e.target.dataset.id;
+        fetch('/delete-task', {
+            method: 'POST',
+            body: JSON.stringify({ id: parseInt(id) })
+        }).then(() => loadTasks());
+    }
+});
+</script>
+
+<script>
+const todoHeader = document.getElementById('todo-header');
+const todoPanel = document.querySelector('.todo-panel');
+const graphicPanel = document.querySelector('.graphic-panel');
+
+todoHeader.addEventListener('click', function() {
+    todoPanel.classList.toggle('expanded');
+    graphicPanel.classList.toggle('hidden');
+});
+
+function loadGraphic() {
+    fetch('/graphic')
+        .then(response => response.json())
+        .then(data => {
+            const columns = document.querySelectorAll('.graphic .day-column');
+            data.forEach((item, index) => {
+                if (columns[index]) {
+                    const bar = columns[index].querySelector('.bar') || columns[index].querySelector('.bar1');
+                    if (bar) {
+                        // Множимо на коефіцієнт (наприклад, 20px за кожну сесію), щоб стовпчик мав гарну висоту
+                        bar.style.height = (item.sessions * 20) + 'px';
+                    }
+                }
+            });
+        });
+}
+
+// Викликаємо функцію при завантаженні та оновлюємо періодично
+loadGraphic();
+setInterval(loadGraphic, 5000);
+</script>
+
+</body>
+</html>

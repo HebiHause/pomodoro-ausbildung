@@ -149,6 +149,3 @@ assets/           GIFs used in this README
 - Add a task by pressing Enter, not only with the plus button
 - Save the to-do list to a JSON file, the same way as the history
 
-## License
-
-MIT

@@ -111,11 +111,11 @@ h2 {
 }
 
 .btn.active {
-    background-color: #5D4445;
+    background-color: #324657;
 }
 
 .btn:hover {
-    background-color: #5D4445;
+    background-color: #324657;
 }
 
 .button {
@@ -130,7 +130,7 @@ h2 {
 }
 
 .button:hover {
-    background-color: #5d444570;
+    background-color: #324657;
     color: white;
 }
 

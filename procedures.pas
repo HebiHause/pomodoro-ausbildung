@@ -332,6 +332,7 @@ begin
       // creating a small object for each day
       DayObj := TJSONObject.Create;
       DayObj.Add('date', DateStr);
+      DayObj.Add('dayLabel', FormatDateTime('ddd', TargetDate)); {short weekday name, e.g. "Mon"}
       DayObj.Add('sessions', Count);
       ResJSON.Add(DayObj);
     end;
